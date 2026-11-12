@@ -25,7 +25,7 @@ export MODAL_CONFIG_PATH=/workspace/nanovllm2deepinfer/out/modal.toml
 UV_CACHE_DIR=/workspace/.cache/uv uv venv .venv --python 3.12
 export UV_CACHE_DIR=/workspace/.cache/uv
 uv pip install --python .venv/bin/python torch==2.6.0 --index-url https://download.pytorch.org/whl/cpu
-uv pip install --python .venv/bin/python 'transformers==4.57.6' xxhash pytest 'modal[api-proxy-support]==1.6.4' ruff numpy
+uv pip install --python .venv/bin/python 'transformers==4.57.6' xxhash pytest 'modal[api-proxy-support]==1.6.4' 'pip-system-certs==5.3' ruff numpy
 uv pip install --python .venv/bin/python --no-deps -e .
 bash scripts/setup_reference.sh
 ```
@@ -36,7 +36,7 @@ bash scripts/setup_reference.sh
 
 Modal CLI 已安装，包含当前代理环境需要的 `api-proxy-support` 可选依赖。第一次运行前需要浏览器登录；凭据只保存在已被 Git 忽略的 `out/modal.toml`，不要提交，也不要贴进聊天。
 
-本次尝试登录返回 `Could not connect to the Modal server`；补齐代理依赖后仍失败。HTTPS 请求能收到 `api.modal.com` 的 HTTP/2 响应，但 Modal SDK 的连接探测在 10 秒内未完成。尚未完成认证，不能据此认定 GPU 实验环境已可用；需要继续排查 SDK 经代理的连接，或在可连接 Modal 的本机使用相同仓库运行。
+初次登录返回 `Could not connect to the Modal server`。进一步绕过外层重试诊断后，确认根因为 `SSLCertVerificationError: self-signed certificate in certificate chain`：grpclib 显式使用 certifi 的 CA 包，缺少云环境代理的受信任 CA。通过在项目虚拟环境安装 `pip-system-certs==5.3`，让新启动的 Python 进程使用系统证书信任，保留 TLS 验证。修复后 Modal SDK 的 TLS/HTTP2 连接探测已通过。浏览器认证和账户验证需另外完成。
 
 ```bash
 mkdir -p out
