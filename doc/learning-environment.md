@@ -36,6 +36,8 @@ bash scripts/setup_reference.sh
 
 Modal CLI 已安装，包含当前代理环境需要的 `api-proxy-support` 可选依赖。第一次运行前需要浏览器登录；凭据只保存在已被 Git 忽略的 `out/modal.toml`，不要提交，也不要贴进聊天。
 
+本次尝试登录返回 `Could not connect to the Modal server`；补齐代理依赖后仍失败。HTTPS 请求能收到 `api.modal.com` 的 HTTP/2 响应，但 Modal SDK 的连接探测在 10 秒内未完成。尚未完成认证，不能据此认定 GPU 实验环境已可用；需要继续排查 SDK 经代理的连接，或在可连接 Modal 的本机使用相同仓库运行。
+
 ```bash
 mkdir -p out
 export MODAL_CONFIG_PATH=/workspace/nanovllm2deepinfer/out/modal.toml
