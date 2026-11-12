@@ -25,7 +25,7 @@ export MODAL_CONFIG_PATH=/workspace/nanovllm2deepinfer/out/modal.toml
 UV_CACHE_DIR=/workspace/.cache/uv uv venv .venv --python 3.12
 export UV_CACHE_DIR=/workspace/.cache/uv
 uv pip install --python .venv/bin/python torch==2.6.0 --index-url https://download.pytorch.org/whl/cpu
-uv pip install --python .venv/bin/python 'transformers==4.57.6' xxhash pytest modal ruff numpy
+uv pip install --python .venv/bin/python 'transformers==4.57.6' xxhash pytest 'modal[api-proxy-support]==1.6.4' ruff numpy
 uv pip install --python .venv/bin/python --no-deps -e .
 bash scripts/setup_reference.sh
 ```
@@ -34,7 +34,7 @@ bash scripts/setup_reference.sh
 
 ## GPU 实验：Modal
 
-Modal CLI 已安装。第一次运行前需要浏览器登录；凭据只保存在已被 Git 忽略的 `out/modal.toml`，不要提交，也不要贴进聊天。
+Modal CLI 已安装，包含当前代理环境需要的 `api-proxy-support` 可选依赖。第一次运行前需要浏览器登录；凭据只保存在已被 Git 忽略的 `out/modal.toml`，不要提交，也不要贴进聊天。
 
 ```bash
 mkdir -p out
